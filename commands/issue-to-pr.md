@@ -1,6 +1,6 @@
 ---
 description: Fix issue, create PR, iterate on review feedback, then report
-argument-hint: <issue-url> [--plan] [--merge]
+argument-hint: <issue-url> [--plan] [--merge] [--opus]
 allowed-tools: Bash(gh:*), Bash(git:*), Bash(cargo:*), Bash(npm:*), Bash(npx:*), Bash(cd:*), Bash(sleep:*), Task, Read, Grep, Glob, Edit, Write, WebFetch
 ---
 
@@ -13,10 +13,12 @@ End-to-end: fix issue → create PR → iterate on feedback → report results.
 - `$1`: Full GitHub issue URL (e.g., `https://github.com/your-org/your-repo/issues/5`). Bare numbers rejected — ambiguous in multi-repo workspaces.
 - `--plan`: Pause after planning for user approval (default: proceed immediately)
 - `--merge`: Auto-merge PR after approval (default: leave for manual review)
+- `--opus`: Use Opus for Phase 1 implementation (default: Sonnet). Use for complex issues that need stronger reasoning.
 
 ```
 /issue-to-pr https://github.com/your-org/your-repo/issues/5
 /issue-to-pr https://github.com/your-org/another-repo/issues/42 --plan --merge
+/issue-to-pr https://github.com/your-org/your-repo/issues/10 --opus
 ```
 
 Arguments passed: `$ARGUMENTS`
@@ -43,13 +45,13 @@ This workflow can run 10+ feedback iterations. To avoid exhausting context:
 - **Phase 1 research** → Explore sub-agent (keeps search results out of parent context)
 - **Phase 3 feedback iterations** → each iteration is a sub-agent (biggest savings)
 - **Review comments** → truncate to 4000 chars; skip comments containing file contents (lock files, LICENSE, etc.)
-- **Sub-agent models** → use `model: "sonnet"` for feedback iterations and CI polling; use default for Phase 1 implementation
+- **Sub-agent models** → use `model: "sonnet"` for feedback iterations and CI polling; use `model: "opus"` for Phase 1 implementation when `--opus` is set, otherwise use default
 
 ## Phase 1: Fix Issue
 
 ### Parse Arguments
 
-Extract from `$ARGUMENTS`: issue URL, `--plan`, `--merge`. If bare number, STOP and ask for full URL.
+Extract from `$ARGUMENTS`: issue URL, `--plan`, `--merge`, `--opus`. If bare number, STOP and ask for full URL.
 
 Parse URL `https://github.com/{OWNER}/{REPO}/issues/{NUMBER}` → OWNER, REPO, NUMBER, DISPLAY_REF (`{OWNER}/{REPO}#{NUMBER}`).
 
@@ -82,7 +84,8 @@ If `--plan`: present plan and STOP. Otherwise proceed immediately.
    git checkout main && git pull origin main
    git checkout -b issue/<NUMBER>-<brief-description>
    ```
-2. Implement following CLAUDE.md conventions
+2. **If `--opus`:** Launch a general-purpose sub-agent (`model: "opus"`) with the implementation plan, CLAUDE.md conventions, and affected file paths. The sub-agent implements the changes, adds/updates tests, and returns a summary of what was done. After the sub-agent completes, verify its changes in the parent context before proceeding.
+   **Otherwise:** Implement directly in the parent context following CLAUDE.md conventions.
 3. **Add/update tests (REQUIRED)** — follow repo's testing policy. If change falls under "What NOT to Test", document justification in PR body under `## Test Justification`
 
 **Verify tests are added before proceeding.**
@@ -173,7 +176,7 @@ For each iteration N (1..10):
 >
 > **Step 1 — CI:** Do NOT use `gh pr checks --watch` or while loops. Max 10 retries: run `gh pr checks <PR_NUMBER>`. If pending, `sleep 45` then retry. If failed: `gh run view <RUN_ID> --log-failed`, fix, validate, push. After 10 retries still pending → report `ci_pending`.
 >
-> **Step 2 — Code Review:** Run the `/self-review` skill on PR #`<PR_NUMBER>`. This runs 5 parallel review agents with confidence scoring (0-100) and filters issues below 80. It always posts a comment to the PR (even if no issues found), creating an audit trail. Treat all issues in the review comment as blocking — they have already passed the ≥80 confidence threshold.
+> **Step 2 — Code Review:** Run the `/self-review` skill on PR #`<PR_NUMBER>`. This runs 5 parallel review agents with confidence scoring (0-100) and filters issues below 75. It always posts a comment to the PR (even if no issues found), creating an audit trail. Treat all issues in the review comment as blocking — they have already passed the ≥75 confidence threshold.
 >
 > **Step 3 — Fix:** Read repo's CLAUDE.md for Pre-Commit Checklist. Fix all issues from the code review. Run ALL pre-commit validation commands. Then: `git add -u :/ && git commit -m "Address code review feedback (iteration <N>)` with summary and Co-Authored-By, then `git push`.
 >
