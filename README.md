@@ -3,11 +3,9 @@
 [![CI](https://github.com/manasight/manasight-claude-commands/actions/workflows/ci.yml/badge.svg)](https://github.com/manasight/manasight-claude-commands/actions/workflows/ci.yml)
 [![License: MIT OR Apache-2.0](https://img.shields.io/badge/license-MIT%20OR%20Apache--2.0-blue)](LICENSE-MIT)
 
-Claude Code workflow commands for autonomous development. These are the commands behind [Manasight's](https://manasight.gg) audited build metrics: 80K+ lines of code, 616 merged PRs, 345 closed issues, and ~6,590 tests across 6 repos in 51 days.
+Claude Code workflow commands for autonomous development. They turn Claude Code from an interactive assistant into an autonomous system that researches issues, writes code with tests, creates PRs, reviews its own work, and iterates on feedback — all without human intervention.
 
-They turn Claude Code from an interactive assistant into an autonomous development system that researches issues, writes code with tests, creates PRs, reviews its own work, and iterates on feedback — all without human intervention.
-
-Fork this repo and adapt the commands for your own project. The customization is the point.
+Built for and used daily on [Manasight](https://manasight.gg). Fork this repo and adapt the commands for your own project.
 
 <!-- TODO: Read the full story: [How we built Manasight with autonomous Claude Code](blog-post-url) -->
 
@@ -66,7 +64,7 @@ Each command has `<!-- CUSTOMIZE -->` comments marking the sections you should a
 - **Pre-Commit Checklist** in your CLAUDE.md — the commands read this to know what validation to run before every commit (see [`examples/claude-md-snippet.md`](examples/claude-md-snippet.md))
 - **Testing Policy** in your CLAUDE.md — what tests to write, what to skip
 - **Coverage tool** — replace the multi-language examples with your specific tool
-- **Confidence threshold** in `/self-review` — default is 80; lower catches more issues, higher reduces noise
+- **Confidence threshold** in `/self-review` — default is 75; lower catches more issues, higher reduces noise
 - **Co-Authored-By** — update the commit trailer to match your preferred format
 
 ## Acknowledgments
