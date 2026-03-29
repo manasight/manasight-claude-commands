@@ -11,7 +11,7 @@ argument-hint: <pr-number-or-url>
 
 Provide a code review for the given pull request.
 
-This command runs 5 parallel review agents against a PR, scores each finding by confidence (0-100), and filters out likely false positives (score < 80). Designed for iterative use — can be re-run on the same PR after fixes without dedup blocking. Always posts a comment (including "No issues found") to maintain an audit trail.
+This command runs 5 parallel review agents against a PR, scores each finding by confidence (0-100), and filters out likely false positives (score < 75). Designed for iterative use — can be re-run on the same PR after fixes without dedup blocking. Always posts a comment (including "No issues found") to maintain an audit trail.
 
 Arguments passed: `$ARGUMENTS`
 
@@ -33,10 +33,10 @@ To do this, follow these steps precisely:
    d. 75: Highly confident. The agent double checked the issue, and verified that it is very likely it is a real issue that will be hit in practice. The existing approach in the PR is insufficient. The issue is very important and will directly impact the code's functionality, or it is an issue that is directly mentioned in the relevant CLAUDE.md.
    e. 100: Absolutely certain. The agent double checked the issue, and confirmed that it is definitely a real issue, that will happen frequently in practice. The evidence directly confirms this.
 
-<!-- CUSTOMIZE: Adjust the confidence threshold (default: 80) based on your
+<!-- CUSTOMIZE: Adjust the confidence threshold (default: 75) based on your
      tolerance for false positives vs missed issues. Lower = more findings. -->
 
-6. Filter out any issues with a score less than 80.
+6. Filter out any issues with a score less than 75.
 7. Use a Haiku agent to repeat the eligibility check from #1, to make sure that the pull request is still eligible for code review.
 8. Finally, use the gh bash command to comment back on the pull request with the result. Always post a comment, even if no issues were found (this provides an audit trail for iterative reviews). When writing your comment, keep in mind to:
    a. Keep your output brief

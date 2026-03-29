@@ -185,7 +185,7 @@ Each iteration runs as a nested sub-agent (`model: "sonnet"`, `subagent_type: "g
 For each iteration N, launch a sub-agent with:
 > You are addressing code review feedback for PR #`<PR_NUMBER>` in `<CURRENT_OWNER>`/`<CURRENT_REPO>` on branch `<BRANCH_NAME>`. Iteration `<N>`.
 >
-> **Code Review:** Run the `/self-review` skill on PR #`<PR_NUMBER>`. This runs 5 parallel review agents with confidence scoring (0-100) and filters issues below 80. It always posts a comment to the PR (even if no issues found), creating an audit trail. Treat all issues in the review comment as blocking — they have already passed the ≥80 confidence threshold.
+> **Code Review:** Run the `/self-review` skill on PR #`<PR_NUMBER>`. This runs 5 parallel review agents with confidence scoring (0-100) and filters issues below 75. It always posts a comment to the PR (even if no issues found), creating an audit trail. Treat all issues in the review comment as blocking — they have already passed the ≥75 confidence threshold.
 >
 > **Fix:** Read CLAUDE.md for Pre-Commit Checklist. Fix all issues from the code review. Run all validation, commit "Address code review feedback (iteration N)" with Co-Authored-By, push.
 >
