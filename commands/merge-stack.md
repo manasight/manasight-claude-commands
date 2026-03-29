@@ -185,6 +185,9 @@ Print summary:
 | 2 | #102  | Add retry logic           | Merged |
 ```
 
+<!-- CUSTOMIZE: Adjust error handling, retry counts, and wait times
+     to match your CI speed and merge queue behavior. -->
+
 ## Error Handling
 
 - **No stack detected**: Report; suggest explicit PR numbers

@@ -69,6 +69,10 @@ Each command has `<!-- CUSTOMIZE -->` comments marking the sections you should a
 - **Confidence threshold** in `/self-review` — default is 80; lower catches more issues, higher reduces noise
 - **Co-Authored-By** — update the commit trailer to match your preferred format
 
+## Acknowledgments
+
+`/self-review` is derived from Anthropic's [`/code-review`](https://github.com/anthropics/claude-plugins-official/tree/main/plugins/code-review) plugin, licensed under Apache-2.0. Modifications include removing the dedup check (enabling re-review after fixes) and adding an "always comment" audit trail.
+
 ## License
 
 Licensed under either of [Apache License, Version 2.0](LICENSE-APACHE) or [MIT License](LICENSE-MIT) at your option.
