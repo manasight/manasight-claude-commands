@@ -4,6 +4,11 @@ description: Automated code review with parallel agents and confidence scoring
 argument-hint: <pr-number-or-url>
 ---
 
+<!-- Derived from Anthropic's /code-review plugin:
+     https://github.com/anthropics/claude-plugins-official/tree/main/plugins/code-review
+     Original work copyright Anthropic, PBC. Licensed under Apache-2.0.
+     Modifications copyright Enthrall Computing, LLC. -->
+
 Provide a code review for the given pull request.
 
 This command runs 5 parallel review agents against a PR, scores each finding by confidence (0-100), and filters out likely false positives (score < 80). Designed for iterative use — can be re-run on the same PR after fixes without dedup blocking. Always posts a comment (including "No issues found") to maintain an audit trail.
